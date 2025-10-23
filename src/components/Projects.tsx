@@ -23,7 +23,7 @@ const projects: Project[] = [
     category: 'AI & Machine Learning',
     // image: 'https://images.unsplash.com/photo-1645839078449-124db8a049fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwbmV1cmFsJTIwbmV0d29ya3xlbnwxfHx8fDE3NjAyNjU2NjV8MA&ixlib=rb-4.1.0&q=80&w=1080',
     //take an image from public/ folder
-    image: '/public/prova.png',
+    image: '/prova.png',
     tags: ['PyTorch', 'TensorFlow', 'AutoML'],
   },
   {
@@ -99,8 +99,8 @@ export function Projects({ onProjectClick }: ProjectsProps) {
               key={category}
               onClick={() => setSelectedCategory(category)}
               className={`px-6 py-2 rounded-full transition-all ${selectedCategory === category
-                  ? 'bg-black dark:bg-white text-white dark:text-black'
-                  : 'bg-white/60 dark:bg-black/60 backdrop-blur-md border border-black/10 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/80'
+                ? 'bg-black dark:bg-white text-white dark:text-black'
+                : 'bg-white/60 dark:bg-black/60 backdrop-blur-md border border-black/10 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/80'
                 }`}
             >
               {category}

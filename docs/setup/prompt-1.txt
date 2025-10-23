@@ -1,0 +1,490 @@
+There is a new feature in Figma that allows you to create all the directories, files and code for a project to set up your portfolio web.
+I have downloaded the code, but had many issues in figuring out which web framework to use (typescript, react, vite ?, tailwind, postcss, es7 ?). I mean I don't have ANY idea of web development so when I see the files I don't know how to install everything in my local and to run npm run dev to have the website in local.
+
+I will do a summary of the files
+
+# Files
+tree -L 3
+.
+├── App.tsx
+├── Attributions.md
+├── components
+│   ├── About.tsx
+│   ├── CodeBlock.tsx
+│   ├── Experience.tsx
+│   ├── figma
+│   │   └── ImageWithFallback.tsx
+│   ├── Footer.tsx
+│   ├── Hero.tsx
+│   ├── ImageGrid.tsx
+│   ├── Navbar.tsx
+│   ├── ProjectDetail.tsx
+│   ├── Projects.tsx
+│   ├── Referrals.tsx
+│   ├── TechStack.tsx
+│   ├── ui
+│   │   ├── accordion.tsx
+│   │   ├── alert-dialog.tsx
+│   │   ├── alert.tsx
+│   │   ├── aspect-ratio.tsx
+│   │   ├── avatar.tsx
+│   │   ├── badge.tsx
+│   │   ├── breadcrumb.tsx
+│   │   ├── button.tsx
+│   │   ├── calendar.tsx
+│   │   ├── card.tsx
+│   │   ├── carousel.tsx
+│   │   ├── chart.tsx
+│   │   ├── checkbox.tsx
+│   │   ├── collapsible.tsx
+│   │   ├── command.tsx
+│   │   ├── context-menu.tsx
+│   │   ├── dialog.tsx
+│   │   ├── drawer.tsx
+│   │   ├── dropdown-menu.tsx
+│   │   ├── form.tsx
+│   │   ├── hover-card.tsx
+│   │   ├── input-otp.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── menubar.tsx
+│   │   ├── navigation-menu.tsx
+│   │   ├── pagination.tsx
+│   │   ├── popover.tsx
+│   │   ├── progress.tsx
+│   │   ├── radio-group.tsx
+│   │   ├── resizable.tsx
+│   │   ├── scroll-area.tsx
+│   │   ├── select.tsx
+│   │   ├── separator.tsx
+│   │   ├── sheet.tsx
+│   │   ├── sidebar.tsx
+│   │   ├── skeleton.tsx
+│   │   ├── slider.tsx
+│   │   ├── sonner.tsx
+│   │   ├── switch.tsx
+│   │   ├── table.tsx
+│   │   ├── tabs.tsx
+│   │   ├── textarea.tsx
+│   │   ├── toggle-group.tsx
+│   │   ├── toggle.tsx
+│   │   ├── tooltip.tsx
+│   │   ├── use-mobile.ts
+│   │   └── utils.ts
+│   └── VideoEmbed.tsx
+├── guidelines
+│   └── How-to-Add-Projects.md
+├── projects
+│   ├── analytics-dashboard.tsx
+│   ├── neural-network-optimizer.tsx
+│   └── projectData.tsx
+└── styles
+    └── globals.css
+
+7 directories, 68 files
+
+# File deep dive
+
+```tsx
+
+```
+
+## App.tsx
+
+```tsx
+import { useState, useEffect } from 'react';
+import { Navbar } from './components/Navbar';
+import { Hero } from './components/Hero';
+import { Projects } from './components/Projects';
+import { About } from './components/About';
+import { Experience } from './components/Experience';
+import { TechStack } from './components/TechStack';
+import { Referrals } from './components/Referrals';
+import { Footer } from './components/Footer';
+import { ProjectDetail } from './components/ProjectDetail';
+import { getProjectDetails } from './projects/projectData';
+
+export default function App() {
+  const [currentView, setCurrentView] = useState<'home' | 'project'>('home');
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+
+...
+
+  useEffect(() => {
+    if (currentView === 'project' && selectedProjectId) {
+      window.history.pushState({}, '', `#project-${selectedProjectId}`);
+    } else if (currentView === 'home') {
+      window.history.pushState({}, '', '#');
+    }
+  }, [currentView, selectedProjectId]);
+
+  if (currentView === 'project' && selectedProjectId) {
+    const projectDetails = getProjectDetails(selectedProjectId);
+    if (projectDetails) {
+      return (
+        <div className="min-h-screen">
+          <Navbar />
+          <ProjectDetail {...projectDetails} onBack={handleBackToHome} />
+          <Footer />
+        </div>
+      );
+    }
+  }
+
+  return (
+    <div className="min-h-screen">
+      <Navbar />
+      <main>
+        <Hero />
+        <Projects onProjectClick={handleProjectClick} />
+        <About />
+        <Experience />
+        <TechStack />
+        <Referrals />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+```
+
+## Hero.tsx
+
+```tsx
+import { ArrowDown } from 'lucide-react';
+
+export function Hero() {
+  const scrollToProjects = () => {
+    const element = document.querySelector('#projects');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  return (
+    <section
+      id="home"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+    >
+    ...
+            <button
+          onClick={scrollToProjects}
+          className="group inline-flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full hover:scale-105 transition-transform"
+        >
+          View My Work
+          <ArrowDown size={20} className="group-hover:translate-y-1 transition-transform" />
+        </button>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <ArrowDown size={24} className="text-foreground/30" />
+      </div>
+    </section>
+  );
+}
+
+```
+
+## How we use the UI components
+In folder components/ui we have a component like `card.tsx`. To use it we do:
+
+### Projects.tsx
+
+```tsx
+import { useState } from 'react';
+import { Card } from './ui/card';
+import { Badge } from './ui/badge';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import { GripVertical, ExternalLink, Github } from 'lucide-react';
+
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  image: string;
+  tags: string[];
+  link?: string;
+  github?: string;
+}
+
+const projects: Project[] = [
+  {
+    id: '1',
+    title: 'Neural Network Optimizer',
+    description: 'Advanced deep learning framework for optimizing neural architectures using AutoML techniques.',
+    category: 'AI & Machine Learning',
+    image: 'https://images.unsplash.com/photo-1645839078449-124db8a049fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwbmV1cmFsJTIwbmV0d29ya3xlbnwxfHx8fDE3NjAyNjU2NjV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    tags: ['PyTorch', 'TensorFlow', 'AutoML'],
+  },
+  ...
+]
+
+...
+  return (
+    <section id="projects" className="py-20 lg:py-32 px-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl lg:text-6xl mb-4 tracking-tight">Featured Projects</h2>
+          <p className="text-lg text-foreground/60 max-w-2xl mx-auto">
+            A selection of my work spanning AI, data science, and full-stack development
+          </p>
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-6 py-2 rounded-full transition-all ${
+                selectedCategory === category
+                  ? 'bg-black dark:bg-white text-white dark:text-black'
+                  : 'bg-white/60 dark:bg-black/60 backdrop-blur-md border border-black/10 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/80'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {filteredProjects.map((project) => (
+            <div
+              key={project.id}
+              className="group cursor-pointer"
+              onClick={() => onProjectClick(project.id)}
+            >
+              <Card className="overflow-hidden border-0 bg-white/60 dark:bg-black/60 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                {/* Drag Handle */}
+                <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="p-2 bg-white/80 dark:bg-black/80 backdrop-blur-md rounded-lg">
+                    <GripVertical size={20} className="text-foreground/60" />
+                  </div>
+                </div>
+
+                {/* Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <ImageWithFallback
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <div className="mb-3">
+                    <Badge variant="secondary" className="mb-3">
+                      {project.category}
+                    </Badge>
+                    <h3 className="mb-2">{project.title}</h3>
+                    <p className="text-sm text-foreground/60">{project.description}</p>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs px-3 py-1 bg-black/5 dark:bg-white/5 rounded-full text-foreground/70"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Links */}
+                  <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground transition-colors">
+                      <ExternalLink size={16} />
+                      View Details
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-foreground/70 hover:text-foreground transition-colors">
+                      <Github size={16} />
+                      Code
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+```
+
+Then the projects folder contains a script for each project:
+
+```tsx
+import { ProjectSection } from '../components/ProjectDetail';
+import { CodeBlock } from '../components/CodeBlock';
+import { ImageGrid } from '../components/ImageGrid';
+
+export const analyticsDashboardSections: ProjectSection[] = [
+  {
+    id: 'overview',
+    title: 'Project Overview',
+    content: (
+      <div className="space-y-4">
+        <p>
+          A real-time analytics dashboard built with React, D3.js, and Python backend 
+          for monitoring business KPIs and metrics. The platform provides interactive 
+          visualizations and customizable widgets for data exploration.
+        </p>
+        <p>
+          The system processes millions of data points per day and provides real-time 
+          updates using WebSocket connections. It's designed for scalability and can 
+          handle multiple concurrent users without performance degradation.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'tech-stack',
+    title: 'Technology Stack',
+    content: (
+      <div className="space-y-4">
+        <p>The dashboard leverages modern web technologies for optimal performance:</p>
+        <CodeBlock
+          language="typescript"
+          filename="dashboard-config.ts"
+          code={`// Frontend Stack};`}
+        />
+      </div>
+    ),
+  },
+  {
+    id: 'features',
+    title: 'Key Features',
+    content: (
+      <div className="space-y-4">
+        <p>
+          The dashboard includes a comprehensive set of features designed for 
+          enterprise analytics needs:
+        </p>
+        <ImageGrid
+          columns={2}
+          images={[
+            {
+              src: 'https://images.unsplash.com/photo-1759661966728-4a02e3c6ed91?w=800',
+              alt: 'Dashboard overview',
+              caption: 'Main dashboard with customizable widgets',
+            },
+            {
+              src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
+              alt: 'Analytics charts',
+              caption: 'Interactive charts and data visualizations',
+            },
+          ]}
+        />
+        <ul className="space-y-2">
+          <li>✓ Real-time data updates via WebSockets</li>
+          <li>✓ Customizable dashboard layouts</li>
+          <li>✓ Export reports to PDF and Excel</li>
+          <li>✓ Advanced filtering and drill-down capabilities</li>
+          <li>✓ Role-based access control</li>
+          <li>✓ Mobile-responsive design</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: 'implementation',
+    title: 'Implementation Highlights',
+    content: (
+      <div className="space-y-4">
+        <p>
+          Here's how we implemented the real-time data streaming functionality:
+        </p>
+        <CodeBlock
+          language="typescript"
+          filename="useRealtimeData.ts"
+          code={`import { useEffect, useState } from 'react';}`}
+        />
+      </div>
+    ),
+  },
+];
+
+```
+
+## Styles
+Finally everythin seem to be styled in the globals.css
+
+```css
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  ...
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+...
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+...
+
+html {
+  font-size: var(--font-size);
+}
+
+```
+
+Given all of this, every time I have sent this to a LLM to configure my project:
+- some have started with react with vue
+- some have started with react npm install but failing because the ui components have hard-coded the versions in the imports
+
+```tsx
+"use client";
+
+import * as React from "react";
+import * as RechartsPrimitive from "recharts";
+```
+- there is discrepancy on whether tailwind css 3 or tailwind css 4 version.
+- there is a lot of discrepancy on whether we should use React, Tailwind, PostCSS, which router, Vue ? Svelte ? what about the configs...
+
+
+I am in a total mess, it should be simple to take the current structure, install things using the right frameworks and have it running locall with the `npm run dev`.
+Your task is to figure out why the files are structured like this, to which framework it would be easy then to adopt to minimize my current files content changes
+And finally you should explain me for a dummy that is not proficient in web why this file structure of this project and any changes needed to be done to adapt it to the framework that is most easy to integrate with given the current set up.

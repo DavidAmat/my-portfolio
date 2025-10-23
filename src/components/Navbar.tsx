@@ -8,6 +8,7 @@ interface NavbarProps {
 const navItems = [
   { name: 'Home', href: '#home' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Blog', href: '#blog' },
   { name: 'About', href: '#about' },
   { name: 'Experience', href: '#experience' },
   { name: 'Tech Stack', href: '#tech-stack' },

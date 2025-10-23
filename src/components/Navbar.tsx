@@ -1,5 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { ArrowLeft, Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+interface NavbarProps {
+  onBackToProjects?: () => void;
+}
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -10,7 +14,7 @@ const navItems = [
   { name: 'Referrals', href: '#referrals' },
 ];
 
-export function Navbar() {
+export function Navbar({ onBackToProjects }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -32,21 +36,31 @@ export function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-black/5 dark:border-white/5'
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+        ? 'bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-black/5 dark:border-white/5'
+        : 'bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
-          <button
-            onClick={() => scrollToSection('#home')}
-            className="text-xl tracking-tight hover:opacity-70 transition-opacity"
-          >
-            DA
-          </button>
+          {/* Logo and Back Button */}
+          <div className="flex items-center">
+            <button
+              onClick={() => scrollToSection('#home')}
+              className="text-xl tracking-tight hover:opacity-70 transition-opacity mr-6"
+            >
+              DA
+            </button>
+            {onBackToProjects && (
+              <button
+                onClick={onBackToProjects}
+                className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors"
+              >
+                <ArrowLeft size={20} />
+                <span>Back to Projects</span>
+              </button>
+            )}
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
@@ -73,6 +87,15 @@ export function Navbar() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-t border-black/5 dark:border-white/5">
+            {onBackToProjects && (
+              <button
+                onClick={onBackToProjects}
+                className="block w-full text-left px-4 py-3 text-foreground/70 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              >
+                <ArrowLeft size={20} className="inline-block mr-2" />
+                Back to Projects
+              </button>
+            )}
             {navItems.map((item) => (
               <button
                 key={item.name}

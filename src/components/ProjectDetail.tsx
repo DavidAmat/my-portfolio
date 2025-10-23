@@ -1,4 +1,5 @@
-import { ArrowLeft, Calendar, Clock, Github, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, ExternalLink, Github } from 'lucide-react';
+import { Navbar } from './Navbar';
 import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 
@@ -39,7 +40,7 @@ export function ProjectDetail({
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 100;
+      const offset = 100; // Height of the Navbar, adjust if Navbar height changes
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
       window.scrollTo({
@@ -51,21 +52,13 @@ export function ProjectDetail({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50/30 dark:from-black dark:to-blue-950/10">
+      <Navbar onBackToProjects={onBack} />
+
       {/* Back Button */}
-      <div className="sticky top-20 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-lg border-b border-black/5 dark:border-white/5">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors"
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Projects</span>
-          </button>
-        </div>
-      </div>
+      {/* Removed the sticky back button bar */}
 
       {/* Hero Section */}
-      <article className="max-w-4xl mx-auto px-6 py-12">
+      <article className="max-w-4xl mx-auto px-6 py-12 pt-32">
         {/* Meta Info */}
         <div className="flex items-center gap-4 mb-6">
           <Badge variant="secondary">{category}</Badge>
@@ -160,7 +153,7 @@ export function ProjectDetail({
         <div className="space-y-16">
           {sections.map((section) => (
             <section key={section.id} id={section.id}>
-              <h2 className="mb-6">{section.title}</h2>
+              <h1 className="mb-6 text-3xl font-bold lg:text-4xl">{section.title}</h1>
               <div className="prose prose-lg max-w-none dark:prose-invert">
                 {section.content}
               </div>

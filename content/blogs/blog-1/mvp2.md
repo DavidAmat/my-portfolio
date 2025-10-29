@@ -1,6 +1,6 @@
 ---
 id: title2
-title: Title2
+title: Blog 1 - Page 2
 description: Minimal demo rendered from markdown.
 date: October 2024
 readTime: 1 min read

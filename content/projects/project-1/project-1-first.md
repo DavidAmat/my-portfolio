@@ -27,7 +27,7 @@ Here's an example with *italic text*, **bold text**, and `inline code`.
 
 ```python:hello.py
 def hello():
-    print("hi from mvp")  ## hey this is a very long commnet hey this is a very long commnet hey this is a very long commnet
+    print("hi from mvp")  ## hey this is a very long commnet hey this is a very long commnet hey this is a very long commnet very long commnet hey this is a very long commnet hey this is a very long commnet
 ```
 
 > Notes  

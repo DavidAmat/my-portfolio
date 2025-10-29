@@ -12,19 +12,14 @@ interface BlogProps {
 
 const blogTopics: BlogTopic[] = [
     {
-        id: 'home-workstation',
-        title: 'Home Workstation',
+        id: 'blog-1',
+        title: 'Blog 1',
         image: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800',
     },
     {
-        id: 'erp-cocktails',
-        title: 'ERP Cocktails',
+        id: 'blog-2',
+        title: 'Blog 2',
         image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
-    },
-    {
-        id: 'my-portfolio',
-        title: 'My Portfolio',
-        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800',
     },
 ];
 
@@ -55,12 +50,10 @@ export function Blog({ onTopicClick }: BlogProps) {
                                 alt={topic.title}
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                            <div className="absolute bottom-0 left-0 right-0 p-6">
-                                <div className="backdrop-blur-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 rounded-xl px-4 py-3">
-                                    <h3 className="text-2xl font-bold text-white">{topic.title}</h3>
-                                </div>
-                            </div>
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent from-0% via-transparent via-50% to-black/100 to-100%" />
+                            <h3 className="absolute bottom-6 left-6 right-6 text-2xl font-bold text-white">
+                                {topic.title}
+                            </h3>
                         </motion.div>
                     ))}
                 </div>

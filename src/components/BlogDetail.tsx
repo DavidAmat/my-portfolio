@@ -141,22 +141,24 @@ export function BlogDetail({ topicTitle, stories, onBack, onNavigateToSection }:
                 <div className="relative">
                     <div
                         ref={carouselRef}
-                        className="flex gap-6 overflow-x-auto px-6 py-8 scrollbar-hide scroll-smooth"
+                        className="flex gap-6 overflow-x-auto py-8 scrollbar-hide scroll-smooth max-w-6xl mx-auto"
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
                         {stories.map((story, index) => (
                             <div
                                 key={story.id}
                                 onClick={() => setSelectedStoryIndex(index)}
-                                className={`relative flex-shrink-0 w-80 aspect-[16/10] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${selectedStoryIndex === index
+                                className={`relative flex-shrink-0 w-64 h-44 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${selectedStoryIndex === index
                                     ? 'shadow-2xl scale-105'
-                                    : 'shadow-lg hover:shadow-xl opacity-70 hover:opacity-100'
+                                    : 'shadow-lg hover:shadow-xl opacity-80 hover:opacity-100'
                                     }`}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-500/40 dark:to-purple-500/40" />
-                                <div className="relative h-full backdrop-blur-xl bg-white/40 dark:bg-black/40 border border-white/20 dark:border-white/10 p-6 flex flex-col justify-end">
-                                    <h3 className="text-xl font-bold mb-2">{story.title}</h3>
-                                    <p className="text-sm text-foreground/70 line-clamp-2">{story.description}</p>
+                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/20 dark:to-purple-500/20" />
+                                <div className="relative h-full backdrop-blur-xl bg-white/50 dark:bg-black/40 border border-black/5 dark:border-white/10 p-4 flex flex-col">
+                                    <h3 className="text-base font-semibold leading-tight line-clamp-1">{story.title}</h3>
+                                    <div className="mt-2 text-xs text-foreground/70 leading-snug overflow-y-auto">
+                                        {story.description}
+                                    </div>
                                 </div>
                                 {selectedStoryIndex === index && (
                                     <div className="absolute inset-0 ring-2 ring-blue-500 dark:ring-blue-400 rounded-2xl pointer-events-none" />
@@ -169,7 +171,7 @@ export function BlogDetail({ topicTitle, stories, onBack, onNavigateToSection }:
             </div>
 
             {/* Story Content */}
-            <article className="max-w-4xl mx-auto px-6 pt-24 pb-12">
+            <article className="max-w-6xl mx-auto px-6 pt-24 pb-12">
                 {/* Meta Info */}
                 <div className="flex items-center gap-4 mb-6 flex-wrap">
                     {selectedStory.tags.map((tag) => (

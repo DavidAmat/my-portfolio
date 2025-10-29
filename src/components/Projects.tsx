@@ -17,16 +17,16 @@ interface Project {
 
 const projects: Project[] = [
   {
-    id: 'neural-network-optimizer',
-    title: 'Neural Network Optimizer',
+    id: 'project-1',
+    title: 'Project 1 Projects',
     description: 'Advanced deep learning framework for optimizing neural architectures using AutoML techniques.',
     category: 'AI & Machine Learning',
     image: '/prova.png',
     tags: ['PyTorch', 'TensorFlow', 'AutoML'],
   },
   {
-    id: 'real-time-analytics-dashboard',
-    title: 'Real-time Analytics Dashboard',
+    id: 'project-2',
+    title: 'Project 2 Projects',
     description: 'Interactive data visualization platform for monitoring KPIs and business metrics in real-time.',
     category: 'Data Science',
     image: 'https://images.unsplash.com/photo-1759661966728-4a02e3c6ed91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwdmlzdWFsaXphdGlvbiUyMGRhc2hib2FyZHxlbnwxfHx8fDE3NjAxNzY1NDl8MA&ixlib=rb-4.1.0&q=80&w=1080',

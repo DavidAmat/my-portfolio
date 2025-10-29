@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:blog && npm run build:projects && tsc -b && vite build",
-    "build:blog": "node scripts/blog-content-builder.mjs",
+    "build": "npm run build:blogs && npm run build:projects && tsc -b && vite build",
+    "build:blogs": "node scripts/blog-content-builder.mjs",
     "build:projects": "node scripts/projects-content-builder.mjs",
     "lint": "eslint .",
     "preview": "vite preview"

@@ -23,7 +23,7 @@ function splitSections(all) {
 
 function buildProjectFolder(projectFolderName) {
     const projectDir = path.join(CONTENT_PROJECTS_DIR, projectFolderName);
-    const outFile = path.join(OUT_DIR, `${projectFolderName}.generated.tsx`);
+    const outFile = path.join(OUT_DIR, projectFolderName, `${projectFolderName}.generated.tsx`);
 
     console.log(`Building project: ${projectFolderName}`);
 
@@ -69,8 +69,8 @@ function buildProjectFolder(projectFolderName) {
 
     const exportName = `${projectFolderName.replace(/-/g, '')}Projects`;
     const out = `/* AUTO-GENERATED. DO NOT EDIT. */
-import type { ProjectStory } from '../components/ProjectDetail';
-import MarkdownContent from '../components/MarkdownContent';
+import type { ProjectStory } from '../../components/ProjectDetail';
+import MarkdownContent from '../../components/MarkdownContent';
 
 export const ${exportName}: ProjectStory[] = [
 ${projects.join(',\n')}

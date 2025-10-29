@@ -1,6 +1,6 @@
 /* AUTO-GENERATED. DO NOT EDIT. */
-import type { BlogStory } from '../components/BlogDetail';
-import MarkdownContent from '../components/MarkdownContent';
+import type { BlogStory } from '../../components/BlogDetail';
+import MarkdownContent from '../../components/MarkdownContent';
 
 export const homeworkstationStories: BlogStory[] = [
 {

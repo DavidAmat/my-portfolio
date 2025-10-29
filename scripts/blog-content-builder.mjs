@@ -23,7 +23,7 @@ function splitSections(all) {
 
 function buildBlogFolder(blogFolderName) {
     const blogDir = path.join(CONTENT_BLOGS_DIR, blogFolderName);
-    const outFile = path.join(OUT_DIR, `${blogFolderName}.generated.tsx`);
+    const outFile = path.join(OUT_DIR, blogFolderName, `${blogFolderName}.generated.tsx`);
 
     console.log(`Building blog: ${blogFolderName}`);
 
@@ -69,8 +69,8 @@ function buildBlogFolder(blogFolderName) {
 
     const exportName = `${blogFolderName.replace(/-/g, '')}Stories`;
     const out = `/* AUTO-GENERATED. DO NOT EDIT. */
-import type { BlogStory } from '../components/BlogDetail';
-import MarkdownContent from '../components/MarkdownContent';
+import type { BlogStory } from '../../components/BlogDetail';
+import MarkdownContent from '../../components/MarkdownContent';
 
 export const ${exportName}: BlogStory[] = [
 ${stories.join(',\n')}

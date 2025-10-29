@@ -140,7 +140,7 @@ export function ProjectDetail({ topicTitle, stories, onBack, onNavigateToSection
       <div className="bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
         <div
           ref={carouselRef}
-          className="flex gap-2 overflow-x-auto px-6 py-2 scrollbar-hide scroll-smooth lg:justify-center"
+          className="flex gap-2 overflow-x-auto py-2 scrollbar-hide scroll-smooth lg:justify-center max-w-6xl mx-auto"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {stories.map((story, index) => (
@@ -160,7 +160,7 @@ export function ProjectDetail({ topicTitle, stories, onBack, onNavigateToSection
       </div>
 
       {/* Story Content */}
-      <article className="max-w-4xl mx-auto px-6 pt-6 pb-12">
+      <article className="max-w-6xl mx-auto px-6 pt-6 pb-12">
         {/* Meta Info */}
         <div className="flex items-center gap-4 mb-6 flex-wrap font-raleway">
           {selectedStory.tags.map((tag) => (

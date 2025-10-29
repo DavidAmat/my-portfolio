@@ -1,6 +1,6 @@
 /* AUTO-GENERATED. DO NOT EDIT. */
-import type { ProjectStory } from '../components/ProjectDetail';
-import MarkdownContent from '../components/MarkdownContent';
+import type { ProjectStory } from '../../components/ProjectDetail';
+import MarkdownContent from '../../components/MarkdownContent';
 
 export const project2Projects: ProjectStory[] = [
 {

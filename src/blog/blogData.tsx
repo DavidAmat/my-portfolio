@@ -1,26 +1,19 @@
 import type { BlogDetailProps } from '../components/BlogDetail';
-import { erpCocktailsStories } from './erp-cocktails';
-import { homeWorkstationStories } from './home-workstation';
-import { myPortfolioStories } from './my-portfolio';
+import { blog1Blog } from './blog-1/blog-1.generated';
+import { blog2Blog } from './blog-2/blog-2.generated';
 
 export function getBlogDetails(topicId: string): BlogDetailProps | null {
     const blogMap: Record<string, BlogDetailProps> = {
-        'home-workstation': {
-            topicId: 'home-workstation',
-            topicTitle: 'Home Workstation',
-            stories: homeWorkstationStories,
+        'blog-1': {
+            topicId: 'blog-1',
+            topicTitle: 'Blog 1',
+            stories: blog1Blog,
             onBack: () => { },
         },
-        'erp-cocktails': {
-            topicId: 'erp-cocktails',
-            topicTitle: 'ERP Cocktails',
-            stories: erpCocktailsStories,
-            onBack: () => { },
-        },
-        'my-portfolio': {
-            topicId: 'my-portfolio',
-            topicTitle: 'My Portfolio',
-            stories: myPortfolioStories,
+        'blog-2': {
+            topicId: 'blog-2',
+            topicTitle: 'Blog 2',
+            stories: blog2Blog,
             onBack: () => { },
         },
     };

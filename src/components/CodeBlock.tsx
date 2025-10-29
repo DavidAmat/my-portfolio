@@ -20,7 +20,7 @@ export function CodeBlock({ code, language = 'typescript', filename, highlight }
   }, [code, language, highlight]);
 
   return (
-    <div className="my-8 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-200 shadow-[3px_10px_30px_rgba(0,0,0,0.1)]">
+    <div className="my-8 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-200 shadow-[3px_10px_30px_rgba(0,0,0,0.1)] w-fit min-w-[25vw]">
       {/* Header */}
       {(filename || language) && (
         <div className="flex items-center justify-between px-6 py-3 bg-gray-800 dark:bg-gray-900 border-b border-gray-700">

@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, Clock, ExternalLink, Github } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Navbar } from './Navbar';
 import { Badge } from './ui/badge';
@@ -15,41 +15,20 @@ export interface ProjectStory {
   title: string;
   description: string;
   date: string;
+  readTime: string;
   tags: string[];
-  technologies?: string[];
   sections: ProjectSection[];
 }
 
 export interface ProjectDetailProps {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  tags: string[];
-  image: string;
-  date: string;
-  readTime: string;
-  githubUrl?: string;
-  liveUrl?: string;
+  topicId: string;
+  topicTitle: string;
   stories: ProjectStory[];
   onBack: () => void;
   onNavigateToSection?: (sectionId: string) => void;
 }
 
-export function ProjectDetail({
-  title,
-  description,
-  category,
-  tags,
-  image,
-  date,
-  readTime,
-  githubUrl,
-  liveUrl,
-  stories,
-  onBack,
-  onNavigateToSection,
-}: ProjectDetailProps) {
+export function ProjectDetail({ topicTitle, stories, onBack, onNavigateToSection }: ProjectDetailProps) {
   const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const selectedStory = stories[selectedStoryIndex];
@@ -64,7 +43,7 @@ export function ProjectDetail({
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 100; // Height of the Navbar, adjust if Navbar height changes
+      const offset = 100;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
       window.scrollTo({
@@ -78,8 +57,9 @@ export function ProjectDetail({
     window.scrollTo(0, 0);
   }, [selectedStoryIndex]);
 
-  // Build nested TOC by scanning headings inside each section (h3/h4)
+  // Build nested TOC by scanning headings inside each section
   useEffect(() => {
+    // small delay to ensure DOM is painted
     const timer = window.setTimeout(() => {
       const articleEl = document.querySelector('article');
       if (!articleEl) return;
@@ -87,18 +67,15 @@ export function ProjectDetail({
       const sectionEls = Array.from(articleEl.querySelectorAll('section[id]')) as HTMLElement[];
       const newToc = sectionEls.map((sectionEl) => {
         const sectionId = sectionEl.id;
-        const titleEl = sectionEl.querySelector('h2');
+        const titleEl = sectionEl.querySelector('h2'); // Changed to h2 since sections will have h2 titles
         const sectionTitle = titleEl?.textContent?.trim() || sectionId;
 
         const headingNodes = Array.from(sectionEl.querySelectorAll('h3, h4')) as HTMLHeadingElement[];
 
         const headings = headingNodes.map((h) => {
+          // ensure id exists
           if (!h.id) {
-            const base = (h.textContent || '')
-              .toLowerCase()
-              .trim()
-              .replace(/[^a-z0-9\s-]/g, '')
-              .replace(/\s+/g, '-');
+            const base = (h.textContent || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
             let slug = base || 'heading';
             let i = 1;
             while (document.getElementById(slug)) {
@@ -107,11 +84,12 @@ export function ProjectDetail({
             h.id = slug;
           }
 
+          // add consistent styles and offset for anchor jumps
           h.classList.add('scroll-mt-28');
           if (h.tagName === 'H3') {
-            h.classList.add('mt-8', 'mb-3', 'text-2xl', 'lg:text-3xl', 'font-semibold');
+            h.classList.add('mt-8', 'mb-3', 'text-2xl', 'lg:text-3xl', 'font-semibold', 'font-oswald');
           } else if (h.tagName === 'H4') {
-            h.classList.add('mt-6', 'mb-2', 'text-xl', 'lg:text-2xl', 'font-semibold');
+            h.classList.add('mt-6', 'mb-2', 'text-xl', 'lg:text-2xl', 'font-semibold', 'font-oswald');
           }
 
           const level = (h.tagName === 'H3' ? 1 : 2) as 1 | 2 | 3;
@@ -146,119 +124,71 @@ export function ProjectDetail({
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50/30 dark:from-black dark:to-blue-950/10">
       <Navbar
         onBackToProjects={onBack}
+        backButtonText="Back to Projects"
         currentView="project"
         onNavigateToSection={onNavigateToSection}
       />
 
-      {/* Hero Section */}
-      <article className="max-w-4xl mx-auto px-6 py-12 pt-32">
+      {/* Project Section Title */}
+      <div className="pt-32 pb-8 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-4xl lg:text-5xl font-bold font-oswald text-center">{topicTitle}</h1>
+        </div>
+      </div>
+
+      {/* Carousel Section */}
+      <div className="bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5">
+        <div
+          ref={carouselRef}
+          className="flex gap-2 overflow-x-auto px-6 py-2 scrollbar-hide scroll-smooth lg:justify-center"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {stories.map((story, index) => (
+            <button
+              key={story.id}
+              onClick={() => setSelectedStoryIndex(index)}
+              className={`relative flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 font-raleway
+                ${selectedStoryIndex === index
+                  ? 'bg-black text-white shadow-lg dark:bg-white dark:text-black'
+                  : 'bg-white/50 text-foreground/70 hover:text-foreground hover:bg-white/80 dark:bg-black/30 dark:hover:bg-black/60'
+                }`}
+            >
+              {story.title}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Story Content */}
+      <article className="max-w-4xl mx-auto px-6 pt-6 pb-12">
         {/* Meta Info */}
-        <div className="flex items-center gap-4 mb-6">
-          <Badge variant="secondary">{category}</Badge>
+        <div className="flex items-center gap-4 mb-6 flex-wrap font-raleway">
+          {selectedStory.tags.map((tag) => (
+            <Badge key={tag} variant="secondary">{tag}</Badge>
+          ))}
           <div className="flex items-center gap-4 text-sm text-foreground/60">
             <div className="flex items-center gap-1">
               <Calendar size={16} />
-              <span>{date}</span>
+              <span>{selectedStory.date}</span>
             </div>
             <div className="flex items-center gap-1">
               <Clock size={16} />
-              <span>{readTime}</span>
+              <span>{selectedStory.readTime}</span>
             </div>
           </div>
         </div>
 
         {/* Title */}
-        <h1 className="text-4xl lg:text-6xl mb-6 tracking-tight">{title}</h1>
+        <h1 className="text-4xl lg:text-6xl mb-6 tracking-tight font-oswald">{selectedStory.title}</h1>
 
         {/* Description */}
-        <p className="text-xl text-foreground/70 mb-8">{description}</p>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-4 py-2 bg-black/5 dark:bg-white/5 rounded-full text-sm"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-4 mb-12">
-          {githubUrl && (
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full hover:scale-105 transition-transform"
-            >
-              <Github size={20} />
-              <span>View Code</span>
-            </a>
-          )}
-          {liveUrl && (
-            <a
-              href={liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-black border border-black/10 dark:border-white/10 rounded-full hover:scale-105 transition-transform"
-            >
-              <ExternalLink size={20} />
-              <span>Live Demo</span>
-            </a>
-          )}
-        </div>
-
-        {/* Featured Image */}
-        <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-12 shadow-2xl">
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <p className="text-xl text-foreground/70 mb-8 font-raleway">{selectedStory.description}</p>
 
         <Separator className="mb-12" />
 
-        {/* Stories Carousel (from markdown) */}
-        {stories.length > 0 && (
-          <div className="mb-12 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/5 dark:border-white/5 rounded-2xl">
-            <div className="relative">
-              <div
-                ref={carouselRef}
-                className="flex gap-6 overflow-x-auto px-6 py-6 scrollbar-hide scroll-smooth"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                {stories.map((story, index) => (
-                  <div
-                    key={story.id}
-                    onClick={() => setSelectedStoryIndex(index)}
-                    className={`relative flex-shrink-0 w-80 aspect-[16/10] rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${selectedStoryIndex === index
-                      ? 'shadow-2xl scale-105'
-                      : 'shadow-lg hover:shadow-xl opacity-70 hover:opacity-100'
-                      }`}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-500/40 dark:to-purple-500/40" />
-                    <div className="relative h-full backdrop-blur-xl bg-white/40 dark:bg-black/40 border border-white/20 dark:border-white/10 p-6 flex flex-col justify-end">
-                      <h3 className="text-xl font-bold mb-2">{story.title}</h3>
-                      <p className="text-sm text-foreground/70 line-clamp-2">{story.description}</p>
-                    </div>
-                    {selectedStoryIndex === index && (
-                      <div className="absolute inset-0 ring-2 ring-blue-500 dark:ring-blue-400 rounded-2xl pointer-events-none" />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-black/10 dark:via-white/10 to-transparent" />
-            </div>
-          </div>
-        )}
-
         {/* Table of Contents */}
-        <div className="mb-12 p-8 rounded-2xl bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/5 dark:border-white/5">
-          <h2 className="mb-4">Table of Contents</h2>
+        <div className="mb-12 p-8 rounded-2xl bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/5 dark:border-white/5 font-raleway">
+          <h2 className="mb-4 font-oswald">Table of Contents</h2>
           <nav>
             <ol className="space-y-2">
               {tocBySection.map((entry, index) => (
@@ -292,10 +222,10 @@ export function ProjectDetail({
 
         {/* Content Sections */}
         <div className="space-y-16">
-          {selectedStory?.sections.map((section) => (
+          {selectedStory.sections.map((section) => (
             <section key={section.id} id={section.id}>
-              <h2 className="mb-6 text-3xl font-bold lg:text-4xl">{section.title}</h2>
-              <div className="prose prose-lg max-w-none dark:prose-invert">
+              <h2 className="mb-6 text-3xl font-bold lg:text-4xl font-oswald">{section.title}</h2>
+              <div className="prose prose-lg max-w-none dark:prose-invert font-raleway">
                 {section.content}
               </div>
             </section>
@@ -306,13 +236,14 @@ export function ProjectDetail({
         <div className="mt-20 pt-8 border-t border-black/10 dark:border-white/10">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors mx-auto"
+            className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors mx-auto font-raleway"
           >
             <ArrowLeft size={20} />
-            <span>Back to all projects</span>
+            <span>Back to Projects</span>
           </button>
         </div>
       </article>
     </div>
   );
 }
+

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:blog && npm run build:projects && tsc -b && vite build",
     "build:blog": "node scripts/blog-content-builder.mjs",
     "build:projects": "node scripts/projects-content-builder.mjs",
     "lint": "eslint .",

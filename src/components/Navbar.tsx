@@ -87,8 +87,8 @@ export function Navbar({ onBackToProjects, backButtonText = "Back to Projects", 
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? 'bg-white/70 dark:bg-black/70 backdrop-blur-xl border-b border-black/5 dark:border-white/5'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-xl ${isScrolled
+        ? 'bg-white/70 dark:bg-black/70 border-b border-black/5 dark:border-white/5'
         : 'bg-transparent'
         }`}
     >
@@ -98,14 +98,14 @@ export function Navbar({ onBackToProjects, backButtonText = "Back to Projects", 
           <div className="flex items-center">
             <button
               onClick={() => scrollToSection('#home')}
-              className="text-xl tracking-tight hover:opacity-70 transition-opacity mr-6"
+              className="text-xl tracking-tight hover:opacity-70 transition-opacity mr-6 font-oswald"
             >
               DA
             </button>
             {onBackToProjects && (
               <button
                 onClick={onBackToProjects}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-black/5 dark:bg-white/5 text-foreground/70 hover:text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-200"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-black/5 dark:bg-white/5 text-foreground/70 hover:text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-200 font-raleway"
               >
                 <ArrowLeft size={18} />
                 <span className="text-sm font-medium">{backButtonText}</span>
@@ -114,7 +114,7 @@ export function Navbar({ onBackToProjects, backButtonText = "Back to Projects", 
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-1 font-raleway">
             {navItems.map((item) => {
               const sectionId = item.href.substring(1);
               const isActive = activeSection === sectionId;
@@ -158,7 +158,7 @@ export function Navbar({ onBackToProjects, backButtonText = "Back to Projects", 
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-t border-black/5 dark:border-white/5">
+          <div className="md:hidden py-4 bg-white/90 dark:bg-black/90 backdrop-blur-xl border-t border-black/5 dark:border-white/5 font-raleway">
             {onBackToProjects && (
               <button
                 onClick={onBackToProjects}

@@ -43,8 +43,8 @@ function buildProjectFolder(projectFolderName) {
     for (const f of files) {
         const raw = fs.readFileSync(path.join(projectDir, f), 'utf8');
         const { data, content } = matter(raw);
-        const { id, title, description, date, tags, technologies } = data || {};
-        if (!id || !title || !description || !date || !Array.isArray(tags)) {
+        const { id, title, description, date, readTime, tags, technologies } = data || {};
+        if (!id || !title || !description || !date || !readTime || !Array.isArray(tags)) {
             throw new Error(`Front-matter missing fields in ${f} (project: ${projectFolderName})`);
         }
         const sections = splitSections(content);
@@ -61,8 +61,8 @@ function buildProjectFolder(projectFolderName) {
     title: '${title.replace(/'/g, "\\'")}',
     description: '${description.replace(/'/g, "\\'")}',
     date: '${date.replace(/'/g, "\\'")}',
+    readTime: '${readTime.replace(/'/g, "\\'")}',
     tags: ${JSON.stringify(tags)},
-    technologies: ${JSON.stringify(technologies || [])},
     sections: [${sectionsTsx}]
   }`);
     }

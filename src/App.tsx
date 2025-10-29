@@ -55,6 +55,30 @@ export default function App() {
     }, 100);
   };
 
+  const handleNavigateToSectionFromBlog = (sectionId: string) => {
+    setCurrentView('home');
+    setSelectedBlogTopicId(null);
+    // Smooth scroll to the requested section
+    setTimeout(() => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  const handleNavigateToSectionFromProject = (sectionId: string) => {
+    setCurrentView('home');
+    setSelectedProjectId(null);
+    // Smooth scroll to the requested section
+    setTimeout(() => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   // Handle browser back button
   useEffect(() => {
     const handlePopState = () => {
@@ -85,8 +109,7 @@ export default function App() {
     if (projectDetails) {
       return (
         <div className="min-h-screen">
-          <Navbar />
-          <ProjectDetail {...projectDetails} onBack={handleBackToHome} />
+          <ProjectDetail {...projectDetails} onBack={handleBackToHome} onNavigateToSection={handleNavigateToSectionFromProject} />
           <Footer />
         </div>
       );
@@ -98,7 +121,7 @@ export default function App() {
     if (blogDetails) {
       return (
         <div className="min-h-screen">
-          <BlogDetail {...blogDetails} onBack={handleBackToBlog} />
+          <BlogDetail {...blogDetails} onBack={handleBackToBlog} onNavigateToSection={handleNavigateToSectionFromBlog} />
           <Footer />
         </div>
       );

@@ -25,12 +25,20 @@ export interface BlogDetailProps {
     topicTitle: string;
     stories: BlogStory[];
     onBack: () => void;
+    onNavigateToSection?: (sectionId: string) => void;
 }
 
-export function BlogDetail({ topicTitle, stories, onBack }: BlogDetailProps) {
+export function BlogDetail({ topicTitle, stories, onBack, onNavigateToSection }: BlogDetailProps) {
     const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
     const carouselRef = useRef<HTMLDivElement>(null);
     const selectedStory = stories[selectedStoryIndex];
+    const [tocBySection, setTocBySection] = useState<
+        Array<{
+            sectionId: string;
+            sectionTitle: string;
+            headings: Array<{ id: string; text: string; level: 1 | 2 | 3 }>;
+        }>
+    >([]);
 
     const scrollToSection = (sectionId: string) => {
         const element = document.getElementById(sectionId);
@@ -49,6 +57,54 @@ export function BlogDetail({ topicTitle, stories, onBack }: BlogDetailProps) {
         window.scrollTo(0, 0);
     }, [selectedStoryIndex]);
 
+    // Build nested TOC by scanning headings inside each section
+    useEffect(() => {
+        // small delay to ensure DOM is painted
+        const timer = window.setTimeout(() => {
+            const articleEl = document.querySelector('article');
+            if (!articleEl) return;
+
+            const sectionEls = Array.from(articleEl.querySelectorAll('section[id]')) as HTMLElement[];
+            const newToc = sectionEls.map((sectionEl) => {
+                const sectionId = sectionEl.id;
+                const titleEl = sectionEl.querySelector('h2'); // Changed to h2 since sections will have h2 titles
+                const sectionTitle = titleEl?.textContent?.trim() || sectionId;
+
+                const headingNodes = Array.from(sectionEl.querySelectorAll('h3, h4')) as HTMLHeadingElement[];
+
+                const headings = headingNodes.map((h) => {
+                    // ensure id exists
+                    if (!h.id) {
+                        const base = (h.textContent || '').toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+                        let slug = base || 'heading';
+                        let i = 1;
+                        while (document.getElementById(slug)) {
+                            slug = `${base}-${i++}`;
+                        }
+                        h.id = slug;
+                    }
+
+                    // add consistent styles and offset for anchor jumps
+                    h.classList.add('scroll-mt-28');
+                    if (h.tagName === 'H3') {
+                        h.classList.add('mt-8', 'mb-3', 'text-2xl', 'lg:text-3xl', 'font-semibold');
+                    } else if (h.tagName === 'H4') {
+                        h.classList.add('mt-6', 'mb-2', 'text-xl', 'lg:text-2xl', 'font-semibold');
+                    }
+
+                    const level = (h.tagName === 'H3' ? 1 : 2) as 1 | 2 | 3;
+                    return { id: h.id, text: (h.textContent || '').trim(), level };
+                });
+
+                return { sectionId, sectionTitle, headings };
+            });
+
+            setTocBySection(newToc);
+        }, 0);
+
+        return () => window.clearTimeout(timer);
+    }, [selectedStoryIndex, selectedStory]);
+
     useEffect(() => {
         const carousel = carouselRef.current;
         if (!carousel) return;
@@ -66,7 +122,12 @@ export function BlogDetail({ topicTitle, stories, onBack }: BlogDetailProps) {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-white to-blue-50/30 dark:from-black dark:to-blue-950/10">
-            <Navbar onBackToProjects={onBack} />
+            <Navbar
+                onBackToProjects={onBack}
+                backButtonText="Back to Blogs"
+                currentView="blog"
+                onNavigateToSection={onNavigateToSection}
+            />
 
             {/* Blog Section Title */}
             <div className="pt-32 pb-8 px-6">
@@ -139,15 +200,29 @@ export function BlogDetail({ topicTitle, stories, onBack }: BlogDetailProps) {
                     <h2 className="mb-4">Table of Contents</h2>
                     <nav>
                         <ol className="space-y-2">
-                            {selectedStory.sections.map((section, index) => (
-                                <li key={section.id}>
+                            {tocBySection.map((entry, index) => (
+                                <li key={entry.sectionId}>
                                     <button
-                                        onClick={() => scrollToSection(section.id)}
-                                        className="text-foreground/70 hover:text-foreground transition-colors text-left"
+                                        onClick={() => scrollToSection(entry.sectionId)}
+                                        className="text-foreground/80 hover:text-foreground transition-colors text-left font-medium"
                                     >
                                         <span className="mr-3">{index + 1}.</span>
-                                        {section.title}
+                                        {entry.sectionTitle}
                                     </button>
+                                    {entry.headings.length > 0 && (
+                                        <ol className="mt-2 ml-6 space-y-1">
+                                            {entry.headings.map((h) => (
+                                                <li key={h.id} className={h.level === 1 ? '' : h.level === 2 ? 'ml-3' : 'ml-6'}>
+                                                    <button
+                                                        onClick={() => scrollToSection(h.id)}
+                                                        className="text-foreground/60 hover:text-foreground transition-colors text-left text-sm"
+                                                    >
+                                                        {h.text}
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ol>
+                                    )}
                                 </li>
                             ))}
                         </ol>
@@ -158,7 +233,7 @@ export function BlogDetail({ topicTitle, stories, onBack }: BlogDetailProps) {
                 <div className="space-y-16">
                     {selectedStory.sections.map((section) => (
                         <section key={section.id} id={section.id}>
-                            <h1 className="mb-6 text-3xl font-bold lg:text-4xl">{section.title}</h1>
+                            <h2 className="mb-6 text-3xl font-bold lg:text-4xl">{section.title}</h2>
                             <div className="prose prose-lg max-w-none dark:prose-invert">
                                 {section.content}
                             </div>
@@ -173,7 +248,7 @@ export function BlogDetail({ topicTitle, stories, onBack }: BlogDetailProps) {
                         className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors mx-auto"
                     >
                         <ArrowLeft size={20} />
-                        <span>Back to all blog topics</span>
+                        <span>Back to Blogs</span>
                     </button>
                 </div>
             </article>

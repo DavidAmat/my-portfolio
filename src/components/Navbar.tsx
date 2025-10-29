@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 
 interface NavbarProps {
   onBackToProjects?: () => void;
+  backButtonText?: string;
+  currentView?: 'home' | 'project' | 'blog';
+  onNavigateToSection?: (sectionId: string) => void;
 }
 
 const navItems = [
@@ -15,23 +18,70 @@ const navItems = [
   { name: 'Referrals', href: '#referrals' },
 ];
 
-export function Navbar({ onBackToProjects }: NavbarProps) {
+export function Navbar({ onBackToProjects, backButtonText = "Back to Projects", currentView = 'home', onNavigateToSection }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState(currentView === 'blog' ? 'blog' : currentView === 'project' ? 'projects' : 'home');
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
 
   useEffect(() => {
+    // Set initial active section based on current view
+    if (currentView === 'blog') {
+      setActiveSection('blog');
+    } else if (currentView === 'project') {
+      setActiveSection('projects');
+    } else {
+      setActiveSection('home');
+    }
+  }, [currentView]);
+
+  useEffect(() => {
+    // Only track scroll position when on home view
+    if (currentView !== 'home') return;
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+
+      // Determine active section based on scroll position
+      const sections = navItems.map(item => item.href.substring(1)); // Remove '#'
+      const scrollPosition = window.scrollY + 100; // Offset for navbar height
+
+      let currentSection = 'home';
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            currentSection = sectionId;
+            break;
+          }
+        }
+      }
+
+      setActiveSection(currentSection);
     };
+
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Call once to set initial state
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentView]);
 
   const scrollToSection = (href: string) => {
+    const sectionId = href.substring(1); // Remove '#'
+    setActiveSection(sectionId);
+    setIsMobileMenuOpen(false);
+
+    // If we're not on the home view, navigate back to home first
+    if (currentView !== 'home' && onNavigateToSection) {
+      onNavigateToSection(sectionId);
+      return;
+    }
+
+    // Otherwise, scroll to section on current page
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setIsMobileMenuOpen(false);
     }
   };
 
@@ -55,25 +105,46 @@ export function Navbar({ onBackToProjects }: NavbarProps) {
             {onBackToProjects && (
               <button
                 onClick={onBackToProjects}
-                className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-black/5 dark:bg-white/5 text-foreground/70 hover:text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-200"
               >
-                <ArrowLeft size={20} />
-                <span>Back to Projects</span>
+                <ArrowLeft size={18} />
+                <span className="text-sm font-medium">{backButtonText}</span>
               </button>
             )}
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                className="px-4 py-2 text-sm text-foreground/70 hover:text-foreground transition-colors"
-              >
-                {item.name}
-              </button>
-            ))}
+            {navItems.map((item) => {
+              const sectionId = item.href.substring(1);
+              const isActive = activeSection === sectionId;
+              const isHovered = hoveredSection === sectionId;
+
+              return (
+                <button
+                  key={item.name}
+                  onClick={() => scrollToSection(item.href)}
+                  onMouseEnter={() => setHoveredSection(sectionId)}
+                  onMouseLeave={() => setHoveredSection(null)}
+                  className="relative px-4 py-2 text-sm transition-colors duration-200 group"
+                >
+                  <span className={`transition-colors duration-200 ${isActive
+                    ? 'text-foreground font-medium'
+                    : 'text-foreground/70 hover:text-foreground'
+                    }`}>
+                    {item.name}
+                  </span>
+
+                  {/* Active indicator line */}
+                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-foreground transition-all duration-200 ${isActive
+                    ? 'w-8 opacity-100'
+                    : isHovered
+                      ? 'w-6 opacity-60'
+                      : 'w-0 opacity-0'
+                    }`} />
+                </button>
+              );
+            })}
           </div>
 
           {/* Mobile Menu Button */}
@@ -91,21 +162,35 @@ export function Navbar({ onBackToProjects }: NavbarProps) {
             {onBackToProjects && (
               <button
                 onClick={onBackToProjects}
-                className="block w-full text-left px-4 py-3 text-foreground/70 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className="block w-full text-left mx-4 mb-2 px-3 py-2 rounded-md bg-black/5 dark:bg-white/5 text-foreground/70 hover:text-foreground hover:bg-black/10 dark:hover:bg-white/10 transition-all duration-200"
               >
-                <ArrowLeft size={20} className="inline-block mr-2" />
-                Back to Projects
+                <ArrowLeft size={18} className="inline-block mr-2" />
+                <span className="text-sm font-medium">{backButtonText}</span>
               </button>
             )}
-            {navItems.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left px-4 py-3 text-foreground/70 hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-              >
-                {item.name}
-              </button>
-            ))}
+            {navItems.map((item) => {
+              const sectionId = item.href.substring(1);
+              const isActive = activeSection === sectionId;
+
+              return (
+                <button
+                  key={item.name}
+                  onClick={() => scrollToSection(item.href)}
+                  className="relative block w-full text-left px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 group"
+                >
+                  <span className={`transition-colors duration-200 ${isActive
+                    ? 'text-foreground font-medium'
+                    : 'text-foreground/70 hover:text-foreground'
+                    }`}>
+                    {item.name}
+                  </span>
+
+                  {/* Active indicator line for mobile */}
+                  <div className={`absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-foreground transition-all duration-200 ${isActive ? 'opacity-100' : 'opacity-0'
+                    }`} />
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

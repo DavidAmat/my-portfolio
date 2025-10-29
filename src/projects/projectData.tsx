@@ -1,6 +1,8 @@
-import type { ProjectDetailProps } from '../components/ProjectDetail';
-import { neuralNetworkOptimizerSections } from './neural-network-optimizer';
+import type { ProjectDetailProps, ProjectStory } from '../components/ProjectDetail';
 import { analyticsDashboardSections } from './analytics-dashboard';
+import { neuralNetworkOptimizerSections } from './neural-network-optimizer';
+import { project1Projects } from './project-1.generated.tsx';
+import { project2Projects } from './project-2.generated.tsx';
 
 // You can easily add more projects by creating new files and importing them here
 export function getProjectDetails(projectId: string): ProjectDetailProps | null {
@@ -16,8 +18,19 @@ export function getProjectDetails(projectId: string): ProjectDetailProps | null 
       readTime: '12 min read',
       githubUrl: 'https://github.com',
       liveUrl: 'https://demo.example.com',
-      sections: neuralNetworkOptimizerSections,
-      onBack: () => {},
+      stories: (project1Projects as ProjectStory[]).length > 0
+        ? (project1Projects as ProjectStory[])
+        : [
+          {
+            id: 'default',
+            title: 'Overview',
+            description: 'Project story generated from code sections.',
+            date: 'October 2024',
+            tags: ['PyTorch', 'TensorFlow'],
+            sections: neuralNetworkOptimizerSections,
+          },
+        ],
+      onBack: () => { },
     },
     '2': {
       id: '2',
@@ -30,8 +43,19 @@ export function getProjectDetails(projectId: string): ProjectDetailProps | null 
       readTime: '10 min read',
       githubUrl: 'https://github.com',
       liveUrl: 'https://dashboard.example.com',
-      sections: analyticsDashboardSections,
-      onBack: () => {},
+      stories: (project2Projects as ProjectStory[]).length > 0
+        ? (project2Projects as ProjectStory[])
+        : [
+          {
+            id: 'default',
+            title: 'Overview',
+            description: 'Project story generated from code sections.',
+            date: 'September 2024',
+            tags: ['React', 'D3.js'],
+            sections: analyticsDashboardSections,
+          },
+        ],
+      onBack: () => { },
     },
     '3': {
       id: '3',
@@ -43,46 +67,55 @@ export function getProjectDetails(projectId: string): ProjectDetailProps | null 
       date: 'August 2024',
       readTime: '15 min read',
       githubUrl: 'https://github.com',
-      sections: [
+      stories: [
         {
-          id: 'overview',
-          title: 'Project Overview',
-          content: (
-            <div className="space-y-4">
-              <p>
-                A comprehensive ML pipeline built on AWS infrastructure, featuring automated model training,
-                deployment, and monitoring. The system handles the entire machine learning lifecycle from
-                data ingestion to model serving.
-              </p>
-              <p>
-                This project demonstrates best practices in MLOps, including CI/CD for ML models,
-                automated retraining, and production monitoring with alerting capabilities.
-              </p>
-            </div>
-          ),
-        },
-        {
-          id: 'architecture',
-          title: 'Pipeline Architecture',
-          content: (
-            <div className="space-y-4">
-              <p>
-                The pipeline is built using a microservices architecture, with each component
-                handling a specific part of the ML workflow. All services are containerized
-                and orchestrated using Kubernetes.
-              </p>
-              <ul className="space-y-2">
-                <li>✓ Data ingestion and preprocessing service</li>
-                <li>✓ Model training and hyperparameter tuning</li>
-                <li>✓ Model evaluation and validation</li>
-                <li>✓ Deployment and serving infrastructure</li>
-                <li>✓ Monitoring and alerting system</li>
-              </ul>
-            </div>
-          ),
+          id: 'default',
+          title: 'Overview',
+          description: 'Generated from existing sections.',
+          date: 'August 2024',
+          tags: ['AWS', 'Kubernetes'],
+          sections: [
+            {
+              id: 'overview',
+              title: 'Project Overview',
+              content: (
+                <div className="space-y-4">
+                  <p>
+                    A comprehensive ML pipeline built on AWS infrastructure, featuring automated model training,
+                    deployment, and monitoring. The system handles the entire machine learning lifecycle from
+                    data ingestion to model serving.
+                  </p>
+                  <p>
+                    This project demonstrates best practices in MLOps, including CI/CD for ML models,
+                    automated retraining, and production monitoring with alerting capabilities.
+                  </p>
+                </div>
+              ),
+            },
+            {
+              id: 'architecture',
+              title: 'Pipeline Architecture',
+              content: (
+                <div className="space-y-4">
+                  <p>
+                    The pipeline is built using a microservices architecture, with each component
+                    handling a specific part of the ML workflow. All services are containerized
+                    and orchestrated using Kubernetes.
+                  </p>
+                  <ul className="space-y-2">
+                    <li>✓ Data ingestion and preprocessing service</li>
+                    <li>✓ Model training and hyperparameter tuning</li>
+                    <li>✓ Model evaluation and validation</li>
+                    <li>✓ Deployment and serving infrastructure</li>
+                    <li>✓ Monitoring and alerting system</li>
+                  </ul>
+                </div>
+              ),
+            },
+          ],
         },
       ],
-      onBack: () => {},
+      onBack: () => { },
     },
     '4': {
       id: '4',
@@ -94,22 +127,31 @@ export function getProjectDetails(projectId: string): ProjectDetailProps | null 
       date: 'July 2024',
       readTime: '11 min read',
       githubUrl: 'https://github.com',
-      sections: [
+      stories: [
         {
-          id: 'overview',
+          id: 'default',
           title: 'Overview',
-          content: (
-            <div className="space-y-4">
-              <p>
-                A predictive analytics engine designed to forecast business metrics, sales trends,
-                and customer behavior. The system uses ensemble methods and time series analysis
-                to achieve high accuracy predictions.
-              </p>
-            </div>
-          ),
+          description: 'Generated from existing sections.',
+          date: 'July 2024',
+          tags: ['Scikit-learn', 'Pandas'],
+          sections: [
+            {
+              id: 'overview',
+              title: 'Overview',
+              content: (
+                <div className="space-y-4">
+                  <p>
+                    A predictive analytics engine designed to forecast business metrics, sales trends,
+                    and customer behavior. The system uses ensemble methods and time series analysis
+                    to achieve high accuracy predictions.
+                  </p>
+                </div>
+              ),
+            },
+          ],
         },
       ],
-      onBack: () => {},
+      onBack: () => { },
     },
     '5': {
       id: '5',
@@ -122,22 +164,31 @@ export function getProjectDetails(projectId: string): ProjectDetailProps | null 
       readTime: '14 min read',
       githubUrl: 'https://github.com',
       liveUrl: 'https://saas.example.com',
-      sections: [
+      stories: [
         {
-          id: 'overview',
-          title: 'Platform Overview',
-          content: (
-            <div className="space-y-4">
-              <p>
-                A production-ready SaaS platform built with Next.js, featuring user authentication,
-                subscription management, and real-time collaboration. The platform is designed
-                for scalability and includes comprehensive monitoring and analytics.
-              </p>
-            </div>
-          ),
+          id: 'default',
+          title: 'Overview',
+          description: 'Generated from existing sections.',
+          date: 'June 2024',
+          tags: ['Next.js', 'Prisma'],
+          sections: [
+            {
+              id: 'overview',
+              title: 'Platform Overview',
+              content: (
+                <div className="space-y-4">
+                  <p>
+                    A production-ready SaaS platform built with Next.js, featuring user authentication,
+                    subscription management, and real-time collaboration. The platform is designed
+                    for scalability and includes comprehensive monitoring and analytics.
+                  </p>
+                </div>
+              ),
+            },
+          ],
         },
       ],
-      onBack: () => {},
+      onBack: () => { },
     },
     '6': {
       id: '6',
@@ -149,22 +200,31 @@ export function getProjectDetails(projectId: string): ProjectDetailProps | null 
       date: 'May 2024',
       readTime: '13 min read',
       githubUrl: 'https://github.com',
-      sections: [
+      stories: [
         {
-          id: 'overview',
-          title: 'System Overview',
-          content: (
-            <div className="space-y-4">
-              <p>
-                An automated quality control system using computer vision and deep learning.
-                The system performs real-time object detection and classification on manufacturing
-                lines, identifying defects with 98% accuracy.
-              </p>
-            </div>
-          ),
+          id: 'default',
+          title: 'Overview',
+          description: 'Generated from existing sections.',
+          date: 'May 2024',
+          tags: ['OpenCV', 'YOLO'],
+          sections: [
+            {
+              id: 'overview',
+              title: 'System Overview',
+              content: (
+                <div className="space-y-4">
+                  <p>
+                    An automated quality control system using computer vision and deep learning.
+                    The system performs real-time object detection and classification on manufacturing
+                    lines, identifying defects with 98% accuracy.
+                  </p>
+                </div>
+              ),
+            },
+          ],
         },
       ],
-      onBack: () => {},
+      onBack: () => { },
     },
   };
 

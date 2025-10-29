@@ -1,6 +1,6 @@
 ---
 id: jupyter-hub-mvp
-title: Jupyter Hub (MVP)
+title: Blog 2 - Page 1
 description: Minimal demo rendered from markdown.
 date: October 2024
 readTime: 1 min read

@@ -67,7 +67,7 @@ function buildBlogFolder(blogFolderName) {
   }`);
     }
 
-    const exportName = `${blogFolderName.replace(/-/g, '')}Stories`;
+    const exportName = `${blogFolderName.replace(/-/g, '')}Blogs`;
     const out = `/* AUTO-GENERATED. DO NOT EDIT. */
 import type { BlogStory } from '../../components/BlogDetail';
 import MarkdownContent from '../../components/MarkdownContent';

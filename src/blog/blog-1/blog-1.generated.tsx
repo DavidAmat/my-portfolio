@@ -2,20 +2,20 @@
 import type { BlogStory } from '../../components/BlogDetail';
 import MarkdownContent from '../../components/MarkdownContent';
 
-export const blog1Blog: BlogStory[] = [
-  {
+export const blog1Blogs: BlogStory[] = [
+{
     id: 'jupyter-hub-mvp',
-    title: 'Jupyter Hub (MVP)',
+    title: 'Blog 1 - Page 1',
     description: 'Minimal demo rendered from markdown.',
     date: 'October 2024',
     readTime: '1 min read',
-    tags: ["Jupyter", "Python"],
+    tags: ["Jupyter","Python"],
     sections: [{
       id: 'intro',
       title: 'Intro',
       content: (<MarkdownContent md={`Hello from [#2563eb](Jupyter Hub)! This is a short MVP.`} />)
     },
-    {
+{
       id: 'why',
       title: 'Why',
       content: (<MarkdownContent md={`Small, fast, and uses your existing components.
@@ -38,19 +38,19 @@ def hello():
 > - do you know ?.`} />)
     }]
   },
-  {
+{
     id: 'title2',
-    title: 'Title2',
+    title: 'Blog 1 - Page 2',
     description: 'Minimal demo rendered from markdown.',
     date: 'October 2024',
     readTime: '1 min read',
-    tags: ["Jupyter", "Python"],
+    tags: ["Jupyter","Python"],
     sections: [{
       id: 'section-1',
       title: 'Section 1',
       content: (<MarkdownContent md={`Hello2 from [#2563eb](Jupyter Hub)! This is a short MVP.`} />)
     },
-    {
+{
       id: 'section-2',
       title: 'Section 2',
       content: (<MarkdownContent md={`Hello
